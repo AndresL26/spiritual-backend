@@ -5,15 +5,20 @@ import { Logger } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // Configurar CORS para permitir peticiones del frontend
+  // Configurar CORS para permitir peticiones desde múltiples orígenes
   app.enableCors({
-    origin: 'http://localhost:3000', // Asumiendo que tu frontend corre en el puerto 3000
+    origin: [
+      'http://localhost:3000',
+      'https://spiritualv4.netlify.app',
+      'https://spiritualv4-backend.netlify.app'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: 'Content-Type,Authorization',
   });
 
-  const port = process.env.PORT || 3001; // Usando puerto 3001 para el backend
-  await app.listen(port);
+  const port = process.env.PORT || 3001;
+  await app.listen(port, '0.0.0.0');
   
   const logger = new Logger('Bootstrap');
   logger.log(`🚀 Aplicación corriendo en: http://localhost:${port}`);
